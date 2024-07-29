@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { AccountService } from '../_services/account.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -8,6 +9,7 @@ import { AccountService } from '../_services/account.service';
 })
 export class RegisterComponent implements OnInit {
   accountService = inject(AccountService);
+  private toaster = inject(ToastrService);
 ngOnInit(): void {
 
 }
@@ -20,7 +22,7 @@ model: any = {}
         console.log(response);
         this.cancel(); // cancel is only used here to close the register form.
       },
-      error: error => console.log(error)
+      error: error => this.toaster.error(error.error)
     });
   }
   cancel() {
