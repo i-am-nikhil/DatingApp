@@ -12,10 +12,14 @@
           <li class="nav-item">
             <a routerLink="/messages" routerLinkActive="active" class="nav-link">Messages</a>
           </li>
-          <li class="nav-item" (click)="logout()">
+          <!-- <li class="nav-item" (click)="logout()">
             <a class="nav-link disabled" aria-disabled="true">Logout</a>
-          </li>
+          </li> -->
         </ng-container> 
+        <li class="nav-item">
+          <a routerLink="/errors" routerLinkActive="active" class="nav-link">Errors</a>
+        </li>
+        
         </ul>
         <div class="dropdown" *ngIf="accountService.currentUser()" dropdown>
             <a class="dropdown-toggle text-light text-decoration-none" dropdownToggle>Welcome {{accountService.currentUser()?.userName | titlecase}}</a>
