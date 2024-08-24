@@ -26,23 +26,24 @@ public class AccountController : BaseApiController
     {
         if (await UserExists(registerDto.UserName)) return BadRequest("User already exists");
 
+        return Ok();
         // Calculate password hash and password salt.
-        using var hmac = new HMACSHA512();
+        // using var hmac = new HMACSHA512();
 
-        var newUSer = new AppUser
-        {
-            UserName = registerDto.UserName.ToLower(),
-            PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-            PasswordSalt = hmac.Key
-        };
+        // var newUSer = new AppUser
+        // {
+        //     UserName = registerDto.UserName.ToLower(),
+        //     PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
+        //     PasswordSalt = hmac.Key
+        // };
 
-        _dbContext.Users.Add(newUSer);
-        await _dbContext.SaveChangesAsync();
-        return new UserDto
-        {
-            UserName = newUSer.UserName,
-            Token = _tokenService.CreateToken(newUSer)
-        };
+        // _dbContext.Users.Add(newUSer);
+        // await _dbContext.SaveChangesAsync();
+        // return new UserDto
+        // {
+        //     UserName = newUSer.UserName,
+        //     Token = _tokenService.CreateToken(newUSer)
+        // };
     }
 
     [HttpPost("login")]
