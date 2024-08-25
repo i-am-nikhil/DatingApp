@@ -19,6 +19,9 @@ import { TestErrorsComponent } from './errors/test-errors/test-errors.component'
 import { ErrorInterceptor } from './_interceptors/error.interceptor';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { ServerErrorComponent } from './errors/server-error/server-error.component';
+import { MemberCardComponent } from './members/member-card/member-card.component';
+import { JwtInterceptor } from './_interceptors/jwt.interceptor';
+import { TabsModule } from 'ngx-bootstrap/tabs';
 
 @NgModule({
   declarations: [
@@ -27,11 +30,11 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     HomeComponent,
     RegisterComponent,
     MemberListComponent,
-    MemberDetailComponent,
     ListsComponent,
     MessagesComponent,
     TestErrorsComponent,
     ServerErrorComponent,
+    MemberCardComponent,
   ],
   imports: [
     BrowserModule,
@@ -40,11 +43,12 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
     BrowserAnimationsModule,
     FormsModule,
     BsDropdownModule.forRoot(),
+    TabsModule,
     ToastrModule.forRoot({
       positionClass: 'toast-bottom-right'
     }) // ToastrModule added
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}, {provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true}],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

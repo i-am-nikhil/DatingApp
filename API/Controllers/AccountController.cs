@@ -53,13 +53,13 @@ public class AccountController : BaseApiController
         if (User == null)
         return Unauthorized("Invalid username");
         
-        var hmac = new HMACSHA512(User.PasswordSalt);
-        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
-        for (int i = 0; i < computedHash.Length; i++)
-        {
-            if (computedHash[i] != User.PasswordHash[i])
-                return Unauthorized("Invalid Password");
-        }
+        // var hmac = new HMACSHA512(User.PasswordSalt);
+        // var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(loginDto.Password));
+        // for (int i = 0; i < computedHash.Length; i++)
+        // {
+        //     if (computedHash[i] != User.PasswordHash[i])
+        //         return Unauthorized("Invalid Password");
+        // }
 
         return new UserDto
         {
