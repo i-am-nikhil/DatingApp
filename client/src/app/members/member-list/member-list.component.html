@@ -1,6 +1,6 @@
 <div class="row">
     
-        <ng-container *ngFor="let member of members">
+        <ng-container *ngFor="let member of memberService.members()">
             <div class="col-3" *ngIf="member">
                 <app-member-card [member]="member"></app-member-card>
             </div>

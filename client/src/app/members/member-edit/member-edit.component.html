@@ -1,0 +1,75 @@
+<ng-container *ngIf="member">
+    <div class="row">
+        <div class="col-4">
+            <h1>Your profile</h1>
+        </div>
+        <div class="col-8">
+            <ng-container *ngIf="editForm.dirty"> <!--simplest way to check if any changes have been made to a form.-->
+                <div class="alert alert-info pb-0">
+                    <p><strong>Information:</strong> You have made changes. Any unsaved changes will be lost.</p>
+                </div>
+            </ng-container>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}" class="card-img img-thumbnail">
+                <div class="card-body">
+                    <div>
+                        <strong>Location:</strong>
+                        <p>{{member.city}}, {{member.country}}</p>
+                    </div>
+                    <div>
+                        <strong>Age:</strong>
+                        <p>{{member.age}}</p>
+                    </div>
+                    <div>
+                        <strong>Last Active:</strong>
+                        <p>{{member.lastActive}}</p>
+                    </div>
+                    <div>
+                        <strong>Member since:</strong>
+                        <p>{{member.created}}</p>
+                    </div>
+                </div>
+                <div class="card-footer">
+                        <button 
+                        [disabled]="!editForm.dirty"
+                        form="editForm" 
+                        type="submit" 
+                        class="btn btn-success col-12"
+                        >Save changes</button> <!--To make this the submit button of editForm, the 
+                        is given the id. This button uses that id to be linked with that form.-->
+                </div>
+            </div>
+        </div>
+        <div class="col-8">
+            <tabset class="member-tabset"><!--member-tabs is a class we are creating because ngx-bootstrap does not allow us to override any of its class.
+                So we create a class and apply our own styling-->
+                <tab heading="About {{member.knownAs}}">
+                    <form id="editForm" #editForm="ngForm" (ngSubmit)="updateMember()">
+                        <h4>Description</h4>
+                        <textarea name="introduction" id=""class="form-control" [(ngModel)]="member.introduction" rows="6">
+                        </textarea><!--Angular uses name parameter to track the input. So name="" should be the exact object
+                        we are binding the input with. That's why it is named introduction, not member. This is also case sensitive-->
+
+                        <h4>Looking for</h4>
+                        <textarea name="lookingFor" id=""class="form-control" [(ngModel)]="member.lookingFor" rows="6"></textarea>
+                        <h4>Interests</h4>
+                        <textarea name="interests" id=""class="form-control" [(ngModel)]="member.interests" rows="6"></textarea>
+                        <h4 class="mt-2">Location Details</h4>
+                        <div class="d-flex align-items-center"> <!--d-flex arranges things in a row rather than in a column-->
+                            <label>City: </label>
+                            <input type="text" [(ngModel)]="member.city" name="city" class="form-control mx-2"> <!--mx is margin left and right-->
+                            <label>Country: </label>
+                            <input type="text" [(ngModel)]="member.country" name="country" class="form-control mx-2">
+                        </div>
+                    </form>
+                    
+                </tab>
+                <tab heading="Edit photos">
+                    Photo Edit will go here
+                </tab>
+            </tabset>
+        </div>
+    </div>
+</ng-container>
