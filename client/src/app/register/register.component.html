@@ -1,4 +1,5 @@
-<form #registerForm="ngForm" (ngSubmit)="register()">
+<!-- TEMPLATE FORM IMPLEMENTATION 
+    <form #registerForm="ngForm" (ngSubmit)="register()">
     <div class="text-center">
         <h2 class="text-primary">Sign up here</h2>
         <hr>
@@ -6,15 +7,6 @@
             <input class="form-control" type="text" name="username" placeholder="Username" [(ngModel)]="model.username">
             <label>Username</label>
         </div>
-
-        <!-- <div class="mb-3">
-            <label>Who is your favorite user?</label>
-            <select class="form-select">
-                    <option *ngFor="let user of usersFromHomeComponent;" [value]="user.userName">
-                        {{ user.userName }}
-                    </option>
-            </select>
-        </div> -->
 
         <div class="mb-3 form-floating">
             <input class="form-control" type="password" name="password" placeholder="Password" [(ngModel)]="model.password">
@@ -25,4 +17,92 @@
             <button class="btn btn-default me-2" (click)="cancel()">Cancel</button>
         </div>
     </div>
-</form>
+</form> -->
+
+
+
+<!--REACTIVE FORM IMPLEMENTATION-->
+<!-- <form [formGroup]="registerForm" (ngSubmit)="register()">
+    <div class="text-center">
+        <h2 class="text-primary">Sign up here</h2>
+        <hr>
+        <div class="mb-3 form-floating">
+            <input 
+            [class.is-invalid]="registerForm.get('username')?.errors 
+            && registerForm.get('username')?.touched"
+            class="form-control" 
+            type="text" 
+            formControlName="username"> // formControlName's value should be same as the property given in component's FormControl(username: new FormControl(),)
+            <label>Username</label>
+                <div class="invalid-feedback text-start">Please enter a username</div>
+        </div> -->
+                <!-- <div class="mb-3 form-floating">
+            <input 
+            [class.is-invalid]="registerForm.get('password')?.errors 
+            && registerForm.get('password')?.touched"
+            class="form-control"
+            type="password" 
+            placeholder="Password" 
+            formControlName="password">
+            <label>Password</label>
+            <div *ngIf="this.registerForm.get('password')?.hasError('required')" class="invalid-feedback text-start">Please enter a password</div>
+            <div *ngIf="this.registerForm.get('password')?.hasError('minlength')" class="invalid-feedback text-start">Password must be at least 4 characters</div>
+            <div *ngIf="this.registerForm.get('password')?.hasError('maxlength')" class="invalid-feedback text-start">Password must be at most 8 characters</div>
+        </div>
+
+        <div class="mb-3 form-floating">
+            <input 
+            [class.is-invalid]="registerForm.get('confirmPassword')?.errors 
+            && registerForm.get('confirmPassword')?.touched"
+            class="form-control"
+             type="password"
+              placeholder="Confirm Password" 
+              formControlName="confirmPassword">
+            <label>Confirm Password</label>
+            <div *ngIf="this.registerForm.get('confirmPassword')?.hasError('required')" class="invalid-feedback text-start">Please enter a password</div>
+            <div *ngIf="this.registerForm.get('confirmPassword')?.hasError('isMatching')" class="invalid-feedback text-start">Please make sure both the passwords match</div>
+
+        </div> -->
+        <form [formGroup]="registerForm" (ngSubmit)="register()">
+            <div class="text-center">
+                <h2 class="text-primary">Sign up here</h2>
+                <hr>
+                <div class="mb-3">
+                    <label style="margin-right: 10px;">I am a: </label>
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" value="male" formControlName="gender">Male
+                    </label>
+                    <label class="form-check-label">
+                        <input type="radio" class="form-check-input" value="female" formControlName="gender">Female
+                    </label>
+                </div>
+                <app-text-input [formControl]="$any(registerForm.controls['username'])" [label]="'Username'"></app-text-input>
+                <app-text-input [formControl]="$any(registerForm.controls['knownAs'])" [label]="'Known as'"></app-text-input>
+                <app-date-picker [formControl]="$any(registerForm.controls['dateOfBirth'])" [label]="'Date of birth'" [maxDate]="maxDate"></app-date-picker>
+                <app-text-input [formControl]="$any(registerForm.controls['city'])" [label]="'City'"></app-text-input>
+                <app-text-input [formControl]="$any(registerForm.controls['country'])" [label]="'Country'"></app-text-input>
+
+                <app-text-input [formControl]="$any(registerForm.controls['password'])" [label]="'Password'"
+                    [type]="'password'"></app-text-input>
+                <app-text-input [formControl]="$any(registerForm.controls['confirmPassword'])" [label]="'Confirm password'"
+                    [type]="'password'"></app-text-input>
+                
+                <ng-container *ngIf="validationErrors">
+                    <div class="alert alert-danger text-start">
+                        <ul>
+                            <ng-container *ngFor="let error of validationErrors">
+                                <li>{{error}}</li>
+                            </ng-container>
+                        </ul>
+                    </div>
+                </ng-container>
+
+                <div class="form-group text-center">
+                    <button [disabled]="!registerForm.valid" class="btn btn-success me-2" type="submit">Register</button>
+                    <button class="btn btn-default me-2" (click)="cancel()">Cancel</button>
+                </div>
+            </div>
+        </form>
+
+<!-- <p>Form value: {{registerForm.value | json}}</p>
+<p>Form value: {{registerForm.status | json}}</p> -->

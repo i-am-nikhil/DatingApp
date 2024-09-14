@@ -4,6 +4,7 @@ using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualBasic;
@@ -14,10 +15,12 @@ public class AccountController : BaseApiController
 {
     DataContext _dbContext;
     ITokenService _tokenService;
-    public AccountController(DataContext dbContext, ITokenService tokenService)
+    IMapper _mapper;
+    public AccountController(DataContext dbContext, ITokenService tokenService, IMapper mapper)
     {
         _dbContext = dbContext;
         _tokenService = tokenService;
+        _mapper = mapper;
     }
 
     [HttpPost("register")] // POST: api/account/register
@@ -26,10 +29,13 @@ public class AccountController : BaseApiController
     {
         if (await UserExists(registerDto.UserName)) return BadRequest("User already exists");
 
-        return Ok();
+        // return Ok();
         // Calculate password hash and password salt.
-        // using var hmac = new HMACSHA512();
-
+        using var hmac = new HMACSHA512();
+        var user = this._mapper.Map<AppUser>(registerDto);
+        user.UserName = registerDto.UserName.ToLower();
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+        user.PasswordSalt = hmac.Key;
         // var newUSer = new AppUser
         // {
         //     UserName = registerDto.UserName.ToLower(),
@@ -37,13 +43,14 @@ public class AccountController : BaseApiController
         //     PasswordSalt = hmac.Key
         // };
 
-        // _dbContext.Users.Add(newUSer);
-        // await _dbContext.SaveChangesAsync();
-        // return new UserDto
-        // {
-        //     UserName = newUSer.UserName,
-        //     Token = _tokenService.CreateToken(newUSer)
-        // };
+        _dbContext.Users.Add(user);
+        await _dbContext.SaveChangesAsync();
+        return new UserDto
+        {
+            UserName = user.UserName,
+            Token = _tokenService.CreateToken(user),
+            KnownAs = user.KnownAs
+        };
     }
 
     [HttpPost("login")]
@@ -67,6 +74,7 @@ public class AccountController : BaseApiController
         {
             UserName = User.UserName,
             Token = _tokenService.CreateToken(User),
+            KnownAs = User.KnownAs,
             PhotoUrl = User.Photos.FirstOrDefault(x => x.IsMain)?.Url
         };
     }

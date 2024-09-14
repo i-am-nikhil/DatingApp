@@ -32,7 +32,7 @@ export class PhotoEditorComponent implements OnInit {
     this.memberService.deletePhoto(photo).subscribe({
       next: _ =>{
         const updatedMember = {...this.member};
-        updatedMember.photos = updatedMember.photos?.filter(p => p.id !== photoId);
+        updatedMember.photos = updatedMember.photos?.filter(p => p.id !== photo.id);
         this.memberChanged.emit(updatedMember); // This is done so that parent component (member-edit is aware of the changes made in this photos and updates its view accordingly.)
       }
     })
@@ -78,7 +78,22 @@ export class PhotoEditorComponent implements OnInit {
       const photo = JSON.parse(response);
       const updatedMember = {...this.member}
       updatedMember.photos?.push(photo);
-      this.memberChanged.emit(updatedMember); 
+      this.memberChanged.emit(updatedMember);
+      if(photo.isMain){
+        const user = this.accountService.currentUser();
+        if (user) {
+          user.photoUrl = photo.url;
+          this.accountService.setCurrentUser(user)
+        }
+
+        updatedMember.photoUrl = photo.url;
+        updatedMember.photos?.forEach(p => {
+          if (p.isMain) p.isMain = false;
+          if (p.id === photo.id) p.isMain = true;
+        });
+
+        this.memberChanged.emit(updatedMember);
+      }
     }
   }
 }

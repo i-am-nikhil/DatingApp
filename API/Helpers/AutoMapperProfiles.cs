@@ -14,5 +14,7 @@ public class AutoMapperProfiles : Profile
             .ForMember(d => d.PhotoUrl, o => o.MapFrom(s => s.Photos.FirstOrDefault(x => x.IsMain)!.Url)); // o for options. null forgiving ! is okay because auto-mapper will set url to null without throwing an exception.
         CreateMap<Photo, PhotoDto>();
         CreateMap<MemberUpdateDto, AppUser>();
+        CreateMap<RegisterDto, AppUser>();
+        CreateMap<string, DateOnly>().ConvertUsing(s => DateOnly.Parse(s));
     }
 }
