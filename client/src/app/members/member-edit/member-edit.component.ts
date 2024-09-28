@@ -1,5 +1,8 @@
+import { DatePipe } from '@angular/common';
 import { Component, HostListener, OnInit, ViewChild, inject } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { TabsModule } from 'ngx-bootstrap/tabs';
+import { TimeagoModule, TimeagoPipe } from 'ngx-timeago';
 import { ToastrService } from 'ngx-toastr';
 import { Member } from 'src/app/_models/member';
 import { AccountService } from 'src/app/_services/account.service';

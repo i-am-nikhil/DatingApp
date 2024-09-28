@@ -49,7 +49,8 @@ public class AccountController : BaseApiController
         {
             UserName = user.UserName,
             Token = _tokenService.CreateToken(user),
-            KnownAs = user.KnownAs
+            KnownAs = user.KnownAs,
+            Gender = user.Gender
         };
     }
 
@@ -75,11 +76,12 @@ public class AccountController : BaseApiController
             UserName = User.UserName,
             Token = _tokenService.CreateToken(User),
             KnownAs = User.KnownAs,
-            PhotoUrl = User.Photos.FirstOrDefault(x => x.IsMain)?.Url
+            PhotoUrl = User.Photos.FirstOrDefault(x => x.IsMain)?.Url,
+            Gender = User.Gender
         };
     }
 
-        private async Task<bool> UserExists(string username)
+    private async Task<bool> UserExists(string username)
     {
         return await _dbContext.Users.AnyAsync(x => x.UserName == username.ToLower());
     }
