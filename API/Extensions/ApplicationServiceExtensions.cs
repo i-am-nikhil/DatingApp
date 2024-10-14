@@ -20,6 +20,7 @@ public static class ApplicationServiceExtensions
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>(); // Scoped Service's lifecycle is maintained per HTTP request.
         services.AddScoped<IUserRepository, UserRepository>();
+        services.AddScoped<ILikesRepository, LikesRepository>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<LogUserActivity>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

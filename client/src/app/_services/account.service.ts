@@ -3,6 +3,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { BehaviorSubject, map } from 'rxjs';
 import { User } from '../_models/user';
 import { environment } from 'src/environments/environment';
+import { LikesService } from './likes.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class AccountService {
   // private currentUserSource = new BehaviorSubject<User | null>(null); // BehaviorSubject allows us to create an observable with an initial value.
   // | denotes Union type where a thing can be more than one type.
   //currentUser$ = this.currentUserSource.asObservable();
+  likeService = inject(LikesService);
   currentUser = signal<User | null>(null);
   constructor(private http: HttpClient) { }
 
@@ -41,6 +43,7 @@ export class AccountService {
         localStorage.setItem('user', JSON.stringify(user));
         // this.currentUserSource.next(user);
         this.currentUser.set(user);
+        this.likeService.getLikeIds();
   }
 
   logout(){

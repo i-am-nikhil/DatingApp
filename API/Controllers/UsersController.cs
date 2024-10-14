@@ -57,7 +57,7 @@ public class UsersController(IUserRepository userRepository, IMapper mapper, IPh
 
         var user = await userRepository.GetUserByNameAsync(User.GetUsername());
         if (user == null) return BadRequest("Could not find user");
-        mapper.Map(memberUpdateDto, user); // We have retrienved user object from the databse and entity framework tracks it.
+        mapper.Map(memberUpdateDto, user); // We have retrieved user object from the database and entity framework tracks it.
         // When we update it with automapper, Entity Framework makes this changes to this object and when we call Save method next, it saves everything to the datbase.
         // If there is no update in the user, EF will not update the DB.
         if(await userRepository.SaveUsersAsync()) return NoContent();
