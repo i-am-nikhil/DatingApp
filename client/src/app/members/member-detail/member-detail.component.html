@@ -1,4 +1,4 @@
-<ng-container *ngIf="member">
+<!-- <ng-container *ngIf="member"> -->
     <div class="row">
         <div class="col-4">
             <div class="card">
@@ -24,31 +24,34 @@
                 <div class="card-footer">
                     <div class="btn-group d-flex">
                         <button class="btn btn-primary">Like</button>
-                        <button class="btn btn-success">Message</button>
+                        <button (click)="selectTab('Messages')" class="btn btn-success">Message</button>
                     </div>
                 </div>
             </div>
         </div>
         <div class="col-8">
-            <tabset class="member-tabset"><!--member-tabs is a class we are creating because ngx-bootstrap does not allow us to override any of its class.
+            <tabset class="member-tabset" #memberTabs><!--member-tabs is a class we are creating because ngx-bootstrap does not allow us to override any of its class.
                 So we create a class and apply our own styling-->
-                <tab heading="About {{member.knownAs}}">
+                <tab heading="About {{member.knownAs}}" (selectTab)="onTabActivated($event)">
                     <h4>Description</h4>
                     <p>{{member.introduction}}</p>
                     <h4>Looking for</h4>
                     <p>{{member.lookingFor}}</p>
                 </tab>
-                <tab heading="Interests">
+                <tab heading="Interests" (selectTab)="onTabActivated($event)">
                     <h4>Interests</h4>
                     <p>{{member.interests}}</p>
                 </tab>
-                <tab heading="Photos" #photoTab="tab"> <!--gallery tag seems to have an issue when used inside a <tag> hence we create a variable and use ngIf to get around it.-->
+                <tab heading="Photos" #photoTab="tab" (selectTab)="onTabActivated($event)"> <!--gallery tag seems to have an issue when used inside a <tag> hence we create a variable and use ngIf to get around it.-->
                     <gallery *ngIf="photoTab.active" [items]="images" [itemAutosize]="true" class="gallery"></gallery>
                 </tab>
-                <tab heading="Messages">
-                    <p>Messages will go here</p>
+                <tab heading="Messages" (selectTab)="onTabActivated($event)">
+                    <app-member-messages [username]="member.userName"
+                     [messages]="messages" 
+                     (updateMessages)="onUpdateMessages($event)"
+                     ></app-member-messages>
                 </tab>
             </tabset>
         </div>
     </div>
-</ng-container>
+<!-- </ng-container> -->
