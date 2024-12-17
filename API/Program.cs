@@ -1,6 +1,8 @@
 using API;
 using API.Data;
+using API.Entities;
 using API.Extensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,9 +32,12 @@ var services = scope.ServiceProvider; // This is how services will be provided u
 try
 {
     var context = services.GetRequiredService<DataContext>();
+    var userManager = services.GetRequiredService<UserManager<AppUser>>(); // We are able to get UserManager service because we have added AddIdentityCore to our services in IdentityServiceExtensions,
+    // which takes care of managing the UserManager as well.
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
     await context.Database.MigrateAsync();
 
-    Seed.SeedUsers(context);
+    Seed.SeedUsers(userManager, roleManager);
 }
 catch (Exception ex)
 {

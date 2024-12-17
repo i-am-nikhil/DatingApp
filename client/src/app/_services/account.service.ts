@@ -1,9 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, inject, signal } from '@angular/core';
-import { BehaviorSubject, map } from 'rxjs';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { User } from '../_models/user';
 import { environment } from 'src/environments/environment';
 import { LikesService } from './likes.service';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,17 @@ export class AccountService {
   //currentUser$ = this.currentUserSource.asObservable();
   likeService = inject(LikesService);
   currentUser = signal<User | null>(null);
+  roles = computed(() => {
+    const user = this.currentUser();
+    if (user && user.token){
+      var role = JSON.parse(atob(user.token.split('.')[1])).role; // atob decodes the token. Token is split with '.' Token consists of 3 parts, we
+      // are interested only in the payload, so index [1] gives us that.
+      return Array.isArray(role) ? role : [role];
+    }
+    else{
+      return [];
+    }
+  })
   constructor(private http: HttpClient) { }
 
   login(model: any){

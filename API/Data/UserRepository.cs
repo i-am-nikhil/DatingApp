@@ -61,13 +61,13 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
             userParams.PageNumber, userParams.PageSize);
     }
 
-    public async Task<AppUser> GetUserByIdAsync(int id)
+    public async Task<AppUser?> GetUserByIdAsync(int id)
     {
         return await context.Users.FindAsync(id);
         // return await context.Users.Include(x => x.Photos).SingleOrDefaultAsync(x => x.Id == id);
     }
 
-    public async Task<AppUser> GetUserByNameAsync(string name)
+    public async Task<AppUser?> GetUserByNameAsync(string name)
     {
         return await context.Users.Include(x => x.Photos).SingleOrDefaultAsync(x => x.UserName == name);
     }

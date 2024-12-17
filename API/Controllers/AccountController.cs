@@ -34,8 +34,8 @@ public class AccountController : BaseApiController
         using var hmac = new HMACSHA512();
         var user = this._mapper.Map<AppUser>(registerDto);
         user.UserName = registerDto.UserName.ToLower();
-        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
-        user.PasswordSalt = hmac.Key;
+        // user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+        // user.PasswordSalt = hmac.Key;
         // var newUSer = new AppUser
         // {
         //     UserName = registerDto.UserName.ToLower(),
@@ -48,7 +48,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             UserName = user.UserName,
-            Token = _tokenService.CreateToken(user),
+            Token = await _tokenService.CreateToken(user),
             KnownAs = user.KnownAs,
             Gender = user.Gender
         };
@@ -59,8 +59,8 @@ public class AccountController : BaseApiController
     {
         var User = await _dbContext.Users
         .Include(p => p.Photos)
-        .FirstOrDefaultAsync(x => x.UserName == loginDto.UserName);
-        if (User == null)
+        .FirstOrDefaultAsync(x => x.UserName.ToLower() == loginDto.UserName.ToLower());
+        if (User == null || User.UserName == null)
         return Unauthorized("Invalid username");
         
         // var hmac = new HMACSHA512(User.PasswordSalt);
@@ -74,7 +74,7 @@ public class AccountController : BaseApiController
         return new UserDto
         {
             UserName = User.UserName,
-            Token = _tokenService.CreateToken(User),
+            Token = await _tokenService.CreateToken(User),
             KnownAs = User.KnownAs,
             PhotoUrl = User.Photos.FirstOrDefault(x => x.IsMain)?.Url,
             Gender = User.Gender
@@ -83,6 +83,6 @@ public class AccountController : BaseApiController
 
     private async Task<bool> UserExists(string username)
     {
-        return await _dbContext.Users.AnyAsync(x => x.UserName == username.ToLower());
+        return await _dbContext.Users.AnyAsync(x => x.NormalizedUserName == username.ToUpper());
     }
 }
