@@ -2,6 +2,7 @@
 using API.Helpers;
 using API.Interfaces;
 using API.Services;
+using API.SignalR;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 
@@ -18,6 +19,7 @@ public static class ApplicationServiceExtensions
         });
 
         services.AddCors();
+        services.AddSignalR();
         services.AddScoped<ITokenService, TokenService>(); // Scoped Service's lifecycle is maintained per HTTP request.
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<ILikesRepository, LikesRepository>();
@@ -26,6 +28,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<LogUserActivity>();
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+        services.AddSingleton<PresenceTracker>();
         return services;
     }
 }

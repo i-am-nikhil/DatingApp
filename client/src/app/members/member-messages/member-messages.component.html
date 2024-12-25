@@ -1,11 +1,11 @@
 <div class="card">
     <div class="card-body">
-        <ng-container *ngIf="messages?.length === 0">
+        <ng-container *ngIf="messageService.messageThread().length === 0">
             <p>No messages yet</p>
         </ng-container>
         <ng-container else>
             <ul class="chat">
-                <ng-container *ngFor="let message of messages">
+                <ng-container *ngFor="let message of messageService.messageThread()">
                     <li>
                         <div>
                             <span class="chat-img float-end">

@@ -16,6 +16,8 @@ public class DataContext : IdentityDbContext<AppUser, AppRole, int, IdentityUser
     public DbSet<UserLike> Likes {get; set; } // Entity Framework makes a DB with the same name "Users".
     // AppUSers has two members: Id and UserName, these will turn into column names.
     public DbSet<Message> Messages { get; set; }
+    public DbSet<Group> Groups { get; set; }
+    public DbSet<Connection> Connections { get; set; }
     protected override void OnModelCreating(ModelBuilder builder) // Since Likes is a table we are creating, we need to configure this for EF. This method overrides EF conventions. 
     { // When we create a migration, EF takes a look at this configuration.
         base.OnModelCreating(builder);

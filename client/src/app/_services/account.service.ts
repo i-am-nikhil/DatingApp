@@ -4,6 +4,7 @@ import { User } from '../_models/user';
 import { environment } from 'src/environments/environment';
 import { LikesService } from './likes.service';
 import { map } from 'rxjs';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +27,7 @@ export class AccountService {
       return [];
     }
   })
+  presenceService: PresenceService = inject(PresenceService);
   constructor(private http: HttpClient) { }
 
   login(model: any){
@@ -55,11 +57,13 @@ export class AccountService {
         // this.currentUserSource.next(user);
         this.currentUser.set(user);
         this.likeService.getLikeIds();
+        this.presenceService.createHubConnection(user);
   }
 
   logout(){
     localStorage.removeItem('user');
     // this.currentUserSource.next(null);
     this.currentUser.set(null);
+    this.presenceService.stopHubConnection();
   }
 }
